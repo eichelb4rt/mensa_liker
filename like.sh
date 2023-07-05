@@ -13,7 +13,7 @@ gebinde_offset=3
 name_offset=5
 
 # read the options from the website
-options=$(lynx --dump "$mensa_page" -connect_timeout=10 | grep -P '^\s*\d\d\d\d-\d\d-\d\d' -B 2 -A 3)
+options=$(lynx --dump "$mensa_page" -connect_timeout=10 | grep -P '^\s*\d\d\d\d-\d\d-\d\d' -B 2 -A 3) || exit 1
 n_lines=$(echo "$options" | wc -l)
 # the number of options is the number of lines (+ 1 extra seperator) divided by the number of lines per options (+ the separators)
 n_options=$((("$n_lines" + 1) / ("$n_lines_per_options" + 1)))
