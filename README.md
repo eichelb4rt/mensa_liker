@@ -2,6 +2,10 @@
 
 ...a couple of times.
 
+## Dependencies
+
+`sudo apt install lynx`
+
 ## Find Out Which Options There Are
 
 `./bash read_options.sh`
