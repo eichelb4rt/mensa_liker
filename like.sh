@@ -31,6 +31,16 @@ echo ""
 echo "Which option do you want to like (0 - $(("$n_options" - 1))): "
 read -r liked_option
 
+# make sure the input is correct
+if ! [[ "$liked_option" =~ ^[0-9]+$ ]]; then
+    echo "error: id must be a number" >&2
+    exit 1
+fi
+if [[ "$liked_option" -lt 0 ]] || [[ "$liked_option" -ge "$n_options" ]]; then
+    echo "error: id must be between 0 and $(("$n_options" - 1))." >&2
+    exit 1
+fi
+
 # get the indices of stuff
 rscid_index=$((("$n_lines_per_options" + 1) * "$liked_option" + "$rscid_offset"))
 proddat_index=$((("$n_lines_per_options" + 1) * "$liked_option" + "$proddat_offset"))
@@ -48,9 +58,15 @@ echo -e "You chose: $name\nrscid: $rscid\nproddat: $proddat\ngebinde: $gebinde"
 echo ""
 echo "How many times do you want to like it: "
 read -r wanted_likes
-echo ""
+
+# make sure the number of times is a number
+if ! [[ "$wanted_likes" =~ ^[0-9]+$ ]]; then
+    echo "error: amount of likes must be a number" >&2
+    exit 1
+fi
 
 # like the stuff
+echo ""
 for ((i = 0; i < "$wanted_likes"; i++)); do
     current_likes=$(curl -s \
         --data-urlencode "essenname=$name" \
