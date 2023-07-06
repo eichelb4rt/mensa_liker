@@ -98,7 +98,7 @@ for ((i = 0; i < "$wanted_likes"; i++)); do
         --data-urlencode "gebinde=$gebinde" \
         --data-urlencode "symbols=" \
         --data-urlencode "context=" \
-        -X POST --trace-ascii request.log https://www.stw-thueringen.de/xhr/quicklike.html --compressed)
+        -X POST https://www.stw-thueringen.de/xhr/quicklike.html --compressed)
     echo "current likes: $current_likes (likes left: $(("$wanted_likes" - "$i" - 1)))"
     sleep "$sleep_time"
 done
