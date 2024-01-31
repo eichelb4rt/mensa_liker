@@ -19,16 +19,20 @@ proddat_offset=2
 gebinde_offset=3
 name_start_offset=5
 
+trim_leading_whitespace() {
+    # trims the leading whitespace of a string
+    echo "$1" | sed -e 's/^[[:space:]]*//'
+}
+
 read_name() {
     # reads the name of option number "$1"
     name_start_index=$((("$n_lines_per_options" + 1) * "$1" + "$name_start_offset"))
     # it is assumed that lines are only split where spaces orginally were
-    # xargs to deal with whitespace, -0 because we don't care about quotes
-    joined=$(echo "${lines["$name_start_index"]}" | xargs -0)
+    joined=$(trim_leading_whitespace "${lines["$name_start_index"]}")
     for ((name_line_index = 1; name_line_index < "$possible_name_lines"; name_line_index++)); do
         # see if there is the keyword "Zusatzstoffe" in the current line. if there is, the name stopped
         current_line_index=$((("$n_lines_per_options" + 1) * "$1" + "$name_start_offset" + "$name_line_index"))
-        current_line=$(echo "${lines["$current_line_index"]}" | xargs -0)
+        current_line=$(trim_leading_whitespace "${lines["$current_line_index"]}")
         if [[ "$current_line" =~ "Zusatzstoffe" ]]; then
             break
         fi
@@ -70,10 +74,9 @@ fi
 rscid_index=$((("$n_lines_per_options" + 1) * "$liked_option" + "$rscid_offset"))
 proddat_index=$((("$n_lines_per_options" + 1) * "$liked_option" + "$proddat_offset"))
 gebinde_index=$((("$n_lines_per_options" + 1) * "$liked_option" + "$gebinde_offset"))
-# get the actual values (xargs to deal with whitespace, -0 because we don't care about quotes)
-rscid=$(echo "${lines["$rscid_index"]}" | xargs -0)
-proddat=$(echo "${lines["$proddat_index"]}" | xargs -0)
-gebinde=$(echo "${lines["$gebinde_index"]}" | xargs -0)
+rscid=$(trim_leading_whitespace "${lines["$rscid_index"]}")
+proddat=$(trim_leading_whitespace "${lines["$proddat_index"]}")
+gebinde=$(trim_leading_whitespace "${lines["$gebinde_index"]}")
 name=$(read_name "$liked_option")
 echo ""
 echo -e "You chose: $name\nrscid: $rscid\nproddat: $proddat\ngebinde: $gebinde"
